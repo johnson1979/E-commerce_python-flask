@@ -1,0 +1,12 @@
+- args:
+    permission:
+      columns:
+      - name
+      - price
+      - discount
+      - owner
+      - id
+      filter: {}
+    role: anonymous
+    table: product
+  type: create_select_permission

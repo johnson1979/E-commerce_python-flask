@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Amazon</title>
+</head>
+<body>
+    <h1 align="center">Amazon E-commerce Application</h1>
+    <h3>
+        {% if token %}
+        <h2>Hello..!{{uname}}</h2>
+           <h4>
+        <a href="{{url_for('logout',token=token)}}">Logout</a>
+    </h4>
+        {% else %}
+        <a href="{{url_for('login')}}">hello!login here </a>
+        {%endif%}
+    </h3>
+
+    <hr>
+    <table>
+        {% for d in pdata %}
+           <tr>
+               <th>
+                   {{d['name']}}
+               </th>
+               <td>||</td>
+
+               <td>price:{{d['price']}}</td>
+               <td>||</td>
+               <td>discount:{{d['discount']}}</td>
+               <td>||</td>
+               <td>owner:{{d['owner']}}</td>
+               <td>||</td>
+               <td>
+                   <a href="{{url_for('addtocart')}}">Add to cart</a>
+               </td>
+
+           </tr>
+            <tr>
+               <td> <hr/></td>
+            </tr>
+
+
+        {% endfor %}
+    </table>
+
+</body>
+</html>

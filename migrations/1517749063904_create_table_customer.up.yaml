@@ -1,0 +1,7 @@
+- args:
+    sql: CREATE TABLE "customer"("hasura_id" integer NOT NULL, "name" text NOT NULL,
+      "email" text NOT NULL, "phone" text NOT NULL, PRIMARY KEY ("hasura_id") )
+  type: run_sql
+- args:
+    name: customer
+  type: add_existing_table_or_view

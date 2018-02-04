@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+<body>
+<h3>
+    Dive into Amazon
+</h3>
+<form action="/login" method="post">
+    <table>
+        <tr>
+            <th>Username</th>
+            <td><input type="text" name="uname"></td>
+        </tr>
+        <tr>
+            <th>Password</th>
+            <td><input type="password" name="password"></td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="login">
+            </td>
+            <td>
+                New User?<a href="{{url_for('signup')}}">register</a>
+            </td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>

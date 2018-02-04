@@ -1,0 +1,8 @@
+- args:
+    sql: CREATE TABLE "customer"("token" serial NOT NULL, "name" text NOT NULL, "email"
+      text NOT NULL, "phone" text NOT NULL, "password" text NOT NULL, PRIMARY KEY
+      ("token") )
+  type: run_sql
+- args:
+    name: customer
+  type: add_existing_table_or_view

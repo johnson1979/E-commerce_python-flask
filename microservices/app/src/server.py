@@ -119,7 +119,7 @@ def signup():
         data=json.loads(resp.content.decode("UTF-8"))
         hasura_id=data['hasura_id']
 
-        return render_template("home.html",uname=uname,token=token,pdata=pdata,hasura_id=id)
+        return render_template("home.html",uname=uname,token=token,pdata=pdata,hasura_id=hasura_id)
 
     return render_template("signup.html")
 

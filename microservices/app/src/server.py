@@ -117,7 +117,7 @@ def signup():
         # Make the query and store response in resp
         resp = requests.request("POST", url, data=json.dumps(requestPayload), headers=headers)
         data=json.loads(resp.content.decode("UTF-8"))
-        hasura_id=data['hasura_id']
+        
 
         return render_template("home.html",uname=uname,token=token,pdata=pdata,hasura_id=hasura_id)
 

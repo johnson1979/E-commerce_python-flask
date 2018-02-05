@@ -30,7 +30,9 @@ def home():
     # Make the query and store response in resp
     resp = requests.request("POST", url, data=json.dumps(requestPayload), headers=headers)
     pdata=json.loads(resp.content.decode("UTF-8"))
-    return render_template("home.html",token=None,uname=None,pdata=pdata)
+
+
+    return render_template("home.html",uname=None,token=None,pdata=pdata,hasura_id=0)
 
 
 @app.route("/signup",methods=['GET','POST'])
@@ -114,9 +116,11 @@ def signup():
 
         # Make the query and store response in resp
         resp = requests.request("POST", url, data=json.dumps(requestPayload), headers=headers)
+        data=json.loads(resp.content.decode("UTF-8"))
+        hasura_id=data['hasura_id']
 
 
-        return render_template("home.html",uname=uname,token=token,pdata=pdata)
+        return render_template("home.html",uname=uname,token=token,pdata=pdata,hasura_id=hasura_id)
 
     return render_template("signup.html")
 
@@ -172,10 +176,48 @@ def login():
         resp = requests.request("POST", url, data=json.dumps(requestPayload), headers=headers)
 
         data=json.loads(resp.content.decode("UTF-8"))
-
+        print(resp.content)
         token=data['auth_token']
-        return render_template("home.html",uname=uname,token=token,pdata=pdata)
+        hasura_id=data['hasura_id']
+        if token:
+            return render_template("home.html",uname=uname,token=token,pdata=pdata,hasura_id=hasura_id)
+        return "Invalid credentials"
     return render_template("login.html")
+
+@app.route('/userinfo/<int:hasura_id>')
+def userinfo(hasura_id):
+    # This is the url to which the query is made
+    url = "https://data.bloodlessly89.hasura-app.io/v1/query"
+
+    # This is the json payload for the query
+    requestPayload = {
+        "type": "select",
+        "args": {
+            "table": "customer",
+            "columns": [
+                "name",
+                "email",
+                "phone"
+            ],
+            "where": {
+                "hasura_id": {
+                    "$eq": hasura_id
+                }
+            }
+        }
+    }
+
+    # Setting headers
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    # Make the query and store response in resp
+    resp = requests.request("POST", url, data=json.dumps(requestPayload), headers=headers)
+
+    # resp.content contains the json response.
+    return (resp.content)
+
 
 @app.route("/logout/<string:token>")
 def logout(token):
@@ -195,12 +237,151 @@ def logout(token):
 
     return redirect("/home")
 
-@app.route("/addtocart")
-def addtocart():
-    return "added to cart ~/"
+@app.route("/addtocart/<int:hasura_id>/<int:prod_id>")
+def addtocart(hasura_id,prod_id):
+    # This is the url to which the query is made
+    url = "https://data.bloodlessly89.hasura-app.io/v1/query"
+
+    # This is the json payload for the query
+    requestPayload = {
+        "type": "select",
+        "args": {
+            "table": "cart",
+            "columns": [
+                "prod_id"
+            ],
+            "where": {
+                "hasura_id": {
+                    "$eq": hasura_id
+                }
+            }
+        }
+    }
+
+    # Setting headers
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    # Make the query and store response in resp
+    resp = requests.request("POST", url, data=json.dumps(requestPayload), headers=headers)
+
+    pdata=json.loads(resp.content.decode("UTF-8"))
+    plist=[]
+    status=False
+    for p in pdata:
+        plist.append(p['prod_id'])
 
 
-if __name__=="__main__":
-    app.run(debug=True)
+    for i in plist:
+        if prod_id is i:
+            status=True
+
+
+    if(status is False):
+        # This is the url to which the query is made
+        url = "https://data.bloodlessly89.hasura-app.io/v1/query"
+
+        # This is the json payload for the query
+        requestPayload = {
+            "type": "insert",
+            "args": {
+                "table": "cart",
+                "objects": [
+                    {
+                        "prod_id": prod_id,
+                        "hasura_id": hasura_id
+                    }
+                ]
+            }
+        }
+
+        # Setting headers
+        headers = {
+            "Content-Type": "application/json"
+        }
+
+        # Make the query and store response in resp
+        resp = requests.request("POST", url, data=json.dumps(requestPayload), headers=headers)
+        return "item added to cart"
+    else:
+        return "sorry!item already added to cart"
+
+
+
+@app.route("/cartitems/<int:hasura_id>")
+def cartitems(hasura_id):
+    # This is the url to which the query is made
+    url = "https://data.bloodlessly89.hasura-app.io/v1/query"
+
+    # This is the json payload for the query
+    requestPayload = {
+        "type": "select",
+        "args": {
+            "table": "cart",
+            "columns": [
+                "prod_id"
+            ],
+            "where": {
+                "hasura_id": {
+                    "$eq": hasura_id
+                }
+            }
+        }
+    }
+
+    # Setting headers
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    # Make the query and store response in resp
+    resp = requests.request("POST", url, data=json.dumps(requestPayload), headers=headers)
+    data=json.loads(resp.content.decode("UTF-8"))
+    l=[]
+    pid=None
+    for id in data:
+        pid=id['prod_id']
+        l.append(pid)
+
+    # This is the url to which the query is made
+    url = "https://data.bloodlessly89.hasura-app.io/v1/query"
+
+    # This is the json payload for the query
+    requestPayload = {
+        "type": "select",
+        "args": {
+            "table": "product",
+            "columns": [
+                "name",
+                "price",
+                "discount",
+                "owner"
+            ],
+            "where": {
+                "id": {
+                    "$in": l
+
+
+                }
+            }
+        }
+    }
+
+    # Setting headers
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    # Make the query and store response in resp
+    resp = requests.request("POST", url, data=json.dumps(requestPayload), headers=headers)
+    data=json.loads(resp.content.decode("UTF-8"))
+    total_price=0
+    for p in data:
+        total_price+=int(p['price'])
+
+
+    return render_template("cart.html",data=data,total_price=total_price)
+
 
 

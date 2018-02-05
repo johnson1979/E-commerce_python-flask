@@ -1,0 +1,15 @@
+- args:
+    role: user
+    table: customer
+  type: drop_select_permission
+- args:
+    permission:
+      columns:
+      - email
+      - phone
+      - hasura_id
+      - name
+      filter: {}
+    role: user
+    table: customer
+  type: create_select_permission

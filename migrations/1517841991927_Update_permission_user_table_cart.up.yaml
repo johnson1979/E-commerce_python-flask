@@ -1,0 +1,9 @@
+- args:
+    permission:
+      columns:
+      - prod_id
+      - hasura_id
+      filter: {}
+    role: user
+    table: cart
+  type: create_select_permission

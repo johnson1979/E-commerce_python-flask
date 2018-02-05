@@ -12,6 +12,12 @@
            <h4>
         <a href="{{url_for('logout',token=token)}}">Logout</a>
     </h4>
+        <h4>
+            <a href="{{url_for('userinfo',hasura_id=hasura_id)}}">Profile</a>
+        </h4>
+        <h4>
+            <a href="{{url_for('cartitems',hasura_id=hasura_id)}}">cart</a>
+        </h4>
         {% else %}
         <a href="{{url_for('login')}}">hello!login here </a>
         {%endif%}
@@ -20,7 +26,7 @@
     <hr>
     <table>
         {% for d in pdata %}
-           <tr>
+
                <th>
                    {{d['name']}}
                </th>
@@ -31,9 +37,10 @@
                <td>discount:{{d['discount']}}</td>
                <td>||</td>
                <td>owner:{{d['owner']}}</td>
-               <td>||</td>
+
+
                <td>
-                   <a href="{{url_for('addtocart')}}">Add to cart</a>
+                   <a href="{{url_for('addtocart',hasura_id=hasura_id,prod_id=d['id'])}}">Add to cart</a>
                </td>
 
            </tr>
@@ -44,6 +51,7 @@
 
         {% endfor %}
     </table>
+
 
 </body>
 </html>

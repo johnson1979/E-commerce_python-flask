@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cart</title>
+</head>
+<body>
+<h2>cart items</h2>
+    <table>
+        {% for d in data %}
+           <tr>
+               <th>
+                   {{d['name']}}
+               </th>
+               <td>||</td>
+
+               <td>price:{{d['price']}}</td>
+
+               <td>||</td>
+               <td>discount:{{d['discount']}}</td>
+               <td>||</td>
+               <td>owner:{{d['owner']}}</td>
+               <td>||</td>
+               <tr>
+               <td> <hr></td>
+            </tr>
+           </tr>
+        <hr>
+         {% endfor %}
+    </table>
+<h2>Total cost is:{{total_price}}</h2>
+<a href="#">Order now</a>
+
+</body>
+</html>

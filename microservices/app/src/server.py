@@ -4,7 +4,6 @@ import requests
 import json
 
 
-
 @app.route("/")
 @app.route("/home")
 def home():
@@ -88,7 +87,8 @@ def signup():
         # Make the query and store response in resp
         resp = requests.request("POST", url, data=json.dumps(requestPayload), headers=headers)
         data=json.loads(resp.content.decode("UTF-8"))
-        id=data['hasura_id']
+
+        hasura_id=data['hasura_id']
         token=data['auth_token']
         # This is the url to which the query is made
         url = "https://data.bloodlessly89.hasura-app.io/v1/query"
@@ -100,7 +100,7 @@ def signup():
                 "table": "customer",
                 "objects": [
                     {
-                        "hasura_id": id,
+                        "hasura_id": hasura_id,
                         "name": uname,
                         "email": email,
                         "phone": phone
@@ -119,8 +119,7 @@ def signup():
         data=json.loads(resp.content.decode("UTF-8"))
         hasura_id=data['hasura_id']
 
-
-        return render_template("home.html",uname=uname,token=token,pdata=pdata,hasura_id=hasura_id)
+        return render_template("home.html",uname=uname,token=token,pdata=pdata,hasura_id=id)
 
     return render_template("signup.html")
 
@@ -176,7 +175,7 @@ def login():
         resp = requests.request("POST", url, data=json.dumps(requestPayload), headers=headers)
 
         data=json.loads(resp.content.decode("UTF-8"))
-        print(resp.content)
+
         token=data['auth_token']
         hasura_id=data['hasura_id']
         if token:
@@ -382,6 +381,5 @@ def cartitems(hasura_id):
 
 
     return render_template("cart.html",data=data,total_price=total_price)
-
 
 

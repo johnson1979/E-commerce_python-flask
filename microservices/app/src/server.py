@@ -382,4 +382,75 @@ def cartitems(hasura_id):
 
     return render_template("cart.html",data=data,total_price=total_price)
 
+@app.route('/search',methods=['GET','POST'])
+def search():
+    if request.method=='POST':
+        name=request.form['search_text']
+        search_text=name.strip()
+       # This is the url to which the query is made
+        url = "https://data.bloodlessly89.hasura-app.io/v1/query"
+
+        # This is the json payload for the query
+        requestPayload = {
+            "type": "select",
+            "args": {
+                "table": "product",
+                "columns": [
+                    "name"
+                ]
+            }
+        }
+
+        # Setting headers
+        headers = {
+            "Content-Type": "application/json"
+        }
+
+        # Make the query and store response in resp
+        resp = requests.request("POST", url, data=json.dumps(requestPayload), headers=headers)
+        prod_name=json.loads(resp.content.decode('UTF-8'))
+        search_prod_items=[]
+
+        for name in prod_name:
+            item_name=name['name']
+            status=item_name.strip().find(search_text)
+            if search_text is "":
+                return redirect('/home')
+            else:
+                if not status is -1 :
+                    search_prod_items.append(item_name)
+
+        url = "https://data.bloodlessly89.hasura-app.io/v1/query"
+        requestPayload = {
+        "type": "select",
+        "args": {
+            "table": "product",
+            "columns": [
+                "name",
+                "price",
+                "discount",
+                "owner"
+            ],
+            "where": {
+                "name": {
+                    "$in": search_prod_items
+
+
+                }
+            }
+        }
+    }
+
+    # Setting headers
+        headers = {
+            "Content-Type": "application/json"
+        }
+
+        # Make the query and store response in resp
+        resp = requests.request("POST", url, data=json.dumps(requestPayload), headers=headers)
+        data=json.loads(resp.content.decode("UTF-8"))
+        return resp.content
+
+    return redirect('/home')
+
 

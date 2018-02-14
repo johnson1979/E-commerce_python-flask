@@ -6,6 +6,9 @@
 </head>
 <body>
     <h1 align="center">Amazon E-commerce Application</h1>
+		<form action="/search" method="post">
+        <input type="text" name="search_text" placeholder="search here">
+    </form>
     <h3>
         {% if token %}
         <h2>Hello..!{{uname}}</h2>
